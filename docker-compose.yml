@@ -1,0 +1,54 @@
+services:
+  rabbitmq:
+    image: 'rabbitmq:3-management'
+    environment:
+      - 'RABBITMQ_DEFAULT_PASS=secret'
+      - 'RABBITMQ_DEFAULT_USER=myuser'
+    ports:
+      - '5672:5672' # AMQP port
+      - '15672:15672' # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 20s
+      timeout: 30s
+      retries: 10
+  
+
+  rabbitspring-producer:
+    image: rabbitspring-producer:latest
+    volumes:
+      - ./rabbitspring-producer/src/main/resources/application.properties:/app/config/application.properties
+    environment:
+      SPRING_CONFIG_LOCATION: file:/app/config/application.properties
+    build:
+      context: ./rabbitspring-producer
+      dockerfile: Dockerfile
+    network_mode: host
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/actuator/health/readiness"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s 
+    depends_on:
+       rabbitmq:
+          condition: service_healthy
+
+  rabbitspring-consumer:
+    image: rabbitspring-consumer:latest
+    volumes:
+      - ./rabbitspring-consumer/src/main/resources/application.properties:/app/config/application.properties
+    environment:
+      SPRING_CONFIG_LOCATION: file:/app/config/application.properties
+    build:
+      context: ./rabbitspring-consumer
+      dockerfile: Dockerfile
+    network_mode: host
+    depends_on:
+      - rabbitspring-producer
+        
+volumes:
+  rabbitmq_data:
+    driver: local
