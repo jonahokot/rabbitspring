@@ -1,5 +1,6 @@
 package com.interswitch.rabbitspringconsumer.service;
 
+import com.interswitch.rabbitspringconsumer.config.WebhookProperties;
 import com.interswitch.rabbitspringconsumer.model.WebhookEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -15,17 +16,18 @@ import java.util.List;
 public class WebhookService {
 
     private final WebClient webClient = WebClient.create();
+    private final WebhookProperties webhookProperties;
 
-    // Hardcoded endpoints - replace with your webhook URLs
-    private final List<String> endpoints = Arrays.asList(
-            "https://webhook.site/4a4a5515-4335-49d7-a3ee-1b047748940d",
-            "https://httpbin.org/post"
-    );
+    public WebhookService(WebhookProperties webhookProperties) {
+        this.webhookProperties = webhookProperties;
+    }
+
 
     public void sendWebhook(WebhookEvent event) {
-        log.info("🚀 Sending webhook event {} to {} endpoint(s)", event.getId(), endpoints.size());
+        log.info("🚀 Sending webhook event {} to {} endpoint(s)", event.getId(),
+                webhookProperties.getEndpoints().size());
 
-        endpoints.forEach(endpoint -> {
+        webhookProperties.getEndpoints().forEach(endpoint -> {
             try {
                 log.info("📤 Sending to: {}", endpoint);
 
