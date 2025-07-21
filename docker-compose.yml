@@ -27,11 +27,11 @@ services:
       dockerfile: Dockerfile
     network_mode: host
     healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:8080/actuator/health/readiness"]
+      test: ["CMD", "nc", "-z", "localhost", "8081"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 40s 
+      start_period: 40s
     depends_on:
        rabbitmq:
           condition: service_healthy
@@ -46,8 +46,17 @@ services:
       context: ./rabbitspring-consumer
       dockerfile: Dockerfile
     network_mode: host
-    # depends_on:
-    #   - rabbitspring-producer
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      rabbitspring-producer:
+        condition: service_healthy
         
 volumes:
   rabbitmq_data:
