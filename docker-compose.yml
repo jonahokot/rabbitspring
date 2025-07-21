@@ -46,8 +46,8 @@ services:
       context: ./rabbitspring-consumer
       dockerfile: Dockerfile
     network_mode: host
-    depends_on:
-      - rabbitspring-producer
+    # depends_on:
+    #   - rabbitspring-producer
         
 volumes:
   rabbitmq_data:
