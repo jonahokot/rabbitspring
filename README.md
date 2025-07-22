@@ -4,10 +4,10 @@ This guide explains how to run the RabbitSpring producer and consumer applicatio
 
 ## Prerequisites
 
-- **Docker & Docker Compose** - For containerized deployment
-- **Make** (optional) - For simplified command execution
-- **Java 21** (for local development)
-- **Maven** (for local development)
+- **[Docker](https://docs.docker.com/engine/install/ubuntu/) & Docker Compose** - For containerized deployment
+- **[Make](https://linuxgenie.net/install-use-make-ubuntu-22-04/)** (optional) - For simplified command execution
+- **[Java 21](https://builds.openlogic.com/downloadJDK/openlogic-openjdk/21.0.8+9/openlogic-openjdk-21.0.8+9-linux-x64.tar.gz)** (for local development)
+- **[Maven](https://www.digitalocean.com/community/tutorials/install-maven-linux-ubuntu)** (for local development)
 
 ## Quick Start Options
 
@@ -29,9 +29,9 @@ docker compose down
 
 ### Option 2: Using Make Commands
 
- ```bash
+```bash
    make run
-   ```
+```
 
 ## Available Make Commands
 
