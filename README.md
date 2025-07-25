@@ -33,6 +33,48 @@ docker compose down
    make run
 ```
 
+### Option 3: Local Development with Maven
+
+For local development, you'll need RabbitMQ running and then start each application separately.
+
+#### Step 1: Start RabbitMQ
+```bash
+# Option A: Using Docker (Recommended)
+docker run -d --name rabbitmq \
+  -p 5672:5672 -p 15672:15672 \
+  -e RABBITMQ_DEFAULT_USER=myuser \
+  -e RABBITMQ_DEFAULT_PASS=secret \
+  rabbitmq:3-management
+
+# Option B: If you have RabbitMQ installed locally
+# Configure user and password: myuser/secret
+# Ensure RabbitMQ is running on localhost:5672
+```
+
+#### Step 2: Build and Run Applications
+```bash
+# Terminal 1: Start Producer
+cd rabbitspring-producer
+mvn clean compile
+mvn spring-boot:run
+
+# Terminal 2: Start Consumer  
+cd rabbitspring-consumer
+mvn clean compile
+mvn spring-boot:run
+```
+
+#### Alternative: Build JARs and Run
+```bash
+# Build both applications
+cd rabbitspring-producer && mvn clean package -DskipTests
+cd ../rabbitspring-consumer && mvn clean package -DskipTests
+
+# Run the JAR files
+java -jar rabbitspring-producer/target/rabbitspring-producer-0.0.1-SNAPSHOT.jar
+java -jar rabbitspring-consumer/target/rabbitspring-consumer-0.0.1-SNAPSHOT.jar
+```
+
 ## Available Make Commands
 
 | Command | Description |

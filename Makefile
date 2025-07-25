@@ -35,7 +35,6 @@ test: test_consumer test_producer
 # Start services with Docker Compose
 run:
 	@echo "Starting services..."
-	set -e && \
 	docker compose down && \
 	docker compose build && \
 	docker compose up -d
